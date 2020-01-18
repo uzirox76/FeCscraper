@@ -3,7 +3,8 @@
 Progetto derivato da FeCscraper di Pizzillo e modificato da Salvatore Crapanzano
 
 Scraper per il servizio Fatture e Corrispettivi. Scarica le fatture emesse e ricevute e il modello f24 dei bolli
-Librerie da installare via pip: requests e pytz.
+
+Dipendenze Librerie da installare via pip: requests e pytz.
 
 Dati di input in ordine:
 
