@@ -1,4 +1,4 @@
-# Downloader Fatture elettoniche e bolli
+# Downloader Fatture elettroniche e i modelli f24 bolli
 
 Progetto derivato da FeCscraper di Pizzillo e modificato da Salvatore Crapanzano
 
