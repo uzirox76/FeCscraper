@@ -1,34 +1,30 @@
-# FeCscraper
-Scraper for Sogei's Fatture e Corrispettivi service.
-Library to install via pip: requests and pytz
+# Downloader Fatture elettoniche e bolli
 
-Input field in order:
+Progetto derivato da FeCscraper di Pizzillo e modificato da Salvatore Crapanzano
 
-CF (or Entratel code) of your FeC service.
-PIN  of your FeC service.
-Password of your FeC service.
-Your Partita IVA
-Date from
-Date to
-
-Ex: fec.py PZZCLD79D79H345Y 3456789 mypassword 01234567891 01012019 01032019
-
-In the subfolder "Ricevute" you will find your FE and related metadati.
-
-Enjoy!
-
-[ITALIANO]
-
-Scraper per il servizio Fatture e Corrispettivi.
+Scraper per il servizio Fatture e Corrispettivi. Scarica le fatture emesse e ricevute e il modello f24 dei bolli
 Librerie da installare via pip: requests e pytz.
 
 Dati di input in ordine:
 
-CF (o codice Entratel) di FeC.
+CF (Codice fiscale o codice Entratel) di FeC.
 PIN di FeC.
 Password di FeC.
-Partita IVA
+Codice Fiscale
 Data dal
 Data al
 
 Nella sottocartella Ricevute troverai le tue FE e i relativi metadati.
+
+Per i bolli 
+CF (Codice fiscale o codice Entratel) di FeC.
+PIN di FeC.
+Password di FeC.
+Codice Fiscale
+Partita IVA
+Numero Trimestre es: 1 o 2 o 3 o 4 
+Anno Es. 2020
+
+att.ne per funzionare la data di scaricamento devi essere antecedente o uguale alla data di pagamento
+
+
