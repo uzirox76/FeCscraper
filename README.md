@@ -15,7 +15,7 @@ Codice Fiscale
 Data dal
 Data al
 
-Nella sottocartella Ricevute troverai le tue FE e i relativi metadati.
+Nella sottocartella contenente il cf del contribuente troverai le tue FE e i relativi metadati.
 
 Per i bolli 
 CF (Codice fiscale o codice Entratel) di FeC.
@@ -27,5 +27,14 @@ Numero Trimestre es: 1 o 2 o 3 o 4
 Anno Es. 2020
 
 att.ne per funzionare la data di scaricamento devi essere antecedente o uguale alla data di pagamento
+
+Ci sono diverse modalitù di accesso, da madificare direttamente nel file
+a) me stesso
+b) incaricati singoli professionisti
+c) incaricati professionisti che fanno parte di uno studio associato
+
+SE NON FUNZIONA, PER VOI DOVETE VEDERE QUESTA PARTE DEL CODICE. CON LO SCRIPT CHE HO CARICATO EE FUNZIONA
+
+
 
 
