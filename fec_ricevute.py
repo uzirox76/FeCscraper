@@ -1,6 +1,6 @@
 ## Licenza Libera progetto originario di Claudio Pizzillo
 ## Modifiche e riadattamenti da Salvatore Crapanzano
-## V. 1.0 - Intermediari e Diretto
+## V. 2.1 - Intermediari e Diretto e Studio Associato
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -17,12 +17,18 @@ def unixTime():
     dt = datetime.now(tz=pytz.utc)
     return str(int(dt.timestamp() * 1000))
 
+profilo = 1 # Impostare il profilo Delega diretta codice 1, Me stesso 2, Studio Associato Default
 CF = sys.argv[1]
 PIN = sys.argv[2]
 Password  = sys.argv[3]
-PIVA  = sys.argv[4]
+cfstudio  = sys.argv[4]
 Dal = sys.argv[5]
 Al = sys.argv[6]
+cfcliente = sys.argv[7]
+pivadiretta = sys.argv[8]
+print('Sintassi:')
+print('py fec_ricevute.py UTENZA_ENTRATEL pin_entratel password_entratel cfstudio Data_inizio Data_fine cf_cliente piva_cliente')
+time.sleep(5)
 
 s = requests.Session()
 s.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36'})
@@ -39,8 +45,10 @@ cookieJar = s.cookies
 
 print('Effettuo il login')
 
+
 payload = {'_58_saveLastPath': 'false', '_58_redirect' : '', '_58_doActionAfterLogin': 'false', '_58_login': CF , '_58_pin': PIN, '_58_password': Password}    
 r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/home?p_p_id=58&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=3&p_p_col_count=4&_58_struts_action=%2Flogin%2Flogin', data=payload)
+
 cookieJar = s.cookies
 
 liferay = re.findall(r"Liferay.authToken = '.*';", r.text)[0]
@@ -49,20 +57,26 @@ p_auth = p_auth.replace("';", "")
 
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/dp/api?v=' + unixTime())
 cookieJar = s.cookies
- 
+
 print('Seleziono il tipo di incarico')
-# Delega diretta
-payload = {'cf_inserito': PIVA}    
-r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=delegaDirettaAction', data=payload)
-
+if profilo == 1:
+# Delega Diretta
+            payload = {'cf_inserito': cfcliente};
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=delegaDirettaAction', data=payload);
+            payload = {'cf_inserito': cfcliente, 'sceltapiva' : pivadiretta};    
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=delegaDirettaAction', data=payload);
 # Me stesso
-# payload = {'sceltaincarico': PIVA + '-000', 'tipoincaricante' : 'incDiretto'}    
-# r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=meStessoAction', data=payload)
-
-# MODIFICA STUDIO ASSOCIATO
-# payload = {'sceltaincarico': PIVA + '-000', 'tipoincaricante' : 'incDelega', 'cf_inserito': cfcliente}    
-# r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=incarichiAction', data=payload)
-#
+elif profilo == 2:
+            payload = {'sceltaincarico': cfstudio + '-000', 'tipoincaricante' : 'incDiretto'};
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=meStessoAction', data=payload)
+            payload = {'sceltaincarico': cfstudio + '-000', 'tipoincaricante' : 'incDiretto', 'sceltapiva' : pivadiretta};    
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=meStessoAction', data=payload);
+# Login per STUDIO ASSOCIATO
+else:
+            payload = {'sceltaincarico': cfstudio + '-000', 'tipoincaricante' : 'incDelega', 'cf_inserito': cfcliente};
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=incarichiAction', data=payload);
+            payload = {'sceltaincarico': cfstudio + '-000', 'tipoincaricante' : 'incDelega', 'cf_inserito': cfcliente, 'sceltapiva' : pivadiretta};
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=incarichiAction', data=payload);
 
 print('Aderisco al servizio')
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/ser/api/fatture/v1/ul/me/adesione/stato/')
@@ -78,7 +92,6 @@ tokens = r.headers
 
 xb2bcookie = r.headers.get('x-b2bcookie')
 xtoken = r.headers.get('x-token')
- 
 
 s.headers.update({'Host': 'ivaservizi.agenziaentrate.gov.it'})
 s.headers.update({'Referer': 'https://ivaservizi.agenziaentrate.gov.it/cons/cons-web/?v=' + unixTime()})
@@ -111,34 +124,43 @@ r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/discla
 cookieJar = s.cookies
 
 # r = s.get('https://ivaservizi.agenziaentrate.gov.it/ser/api/monitoraggio/v1/monitoraggio/fatture/?v='+unixTime()+'&idFiscCedente=&idFiscDestinatario=&idFiscEmittente=&idFiscTrasmittente=&idSdi=&perPage=10&start=1&statoFile=&tipoFattura=EMESSA')
-print('Scarico il json delle fatture ricevute per la partita IVA ' + PIVA)
+print('Scarico il json delle fatture ricevute per la partita IVA ' + cfcliente)
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/ricevute/dal/'+Dal+'/al/'+Al+'?v=' + unixTime(), headers = headers)
 
 with open('fe_ricevute.json', 'wb') as f:
     f.write(r.content)
     
 print('Inizio a scaricare le fatture ricevute')
-path = r'FattureRicevute_' + PIVA
+path = r'FattureRicevute_' + cfcliente
 if not os.path.exists(path):
     os.makedirs(path)
 with open('fe_ricevute.json') as data_file:    
     data = json.load(data_file)
+    numero_fatture = 0
+    numero_notifiche = 0
     for fattura in data['fatture']:
         fatturaFile = fattura['tipoInvio']+fattura['idFattura']
         r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fatture/file/'+fatturaFile+'?tipoFile=FILE_FATTURA&download=1&v='+unixTime() , headers = headers_token )
         if r.status_code == 200:
+            numero_fatture = numero_fatture + 1
             d = r.headers['content-disposition']
             fname = re.findall("filename=(.+)", d)
             print('Downloading ' + fname[0])
+            print('Totale fatture scaricate: ', numero_fatture)
             with open(path + '/' + fname[0], 'wb') as f:
                 f.write(r.content)
                 fmetadato = re.findall("filename=(.+)", d)
         r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fatture/file/'+fatturaFile+'?tipoFile=FILE_METADATI&download=1&v='+unixTime() , headers = headers_token )
         if r.status_code == 200:
+            numero_notifiche = numero_notifiche + 1
             d = r.headers['content-disposition']
             fname = re.findall("filename=(.+)", d)
             print('Downloading metadati = ' + fname[0])
             print('Downloading metadati rinominato = ' + fmetadato[0] + '_metadato.xml')
+            print('Totale notifiche scaricate: ', numero_notifiche)
             with open(path + '/' + fmetadato[0] + '_metadato.xml', 'wb') as f:
                 f.write(r.content)                
+os.system('cls')
+print('Totale fatture scaricate: ', numero_fatture)
+print('Totale notifiche scaricate: ', numero_notifiche)
 sys.exit()

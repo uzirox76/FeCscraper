@@ -27,7 +27,7 @@ Al = sys.argv[6]
 cfcliente = sys.argv[7]
 pivadiretta = sys.argv[8]
 print('Sintassi:')
-print('py fec_emesse.py UTENZA_ENTRATEL pin_entratel password_entratel cfstudio Data_inizio Data_fine cf_cliente piva_cliente')
+print('py fec_trans.py UTENZA_ENTRATEL pin_entratel password_entratel cfstudio Data_inizio Data_fine cf_cliente piva_cliente')
 time.sleep(5)
 
 s = requests.Session()
@@ -44,7 +44,6 @@ print('Collegamento alla homepage')
 cookieJar = s.cookies
 
 print('Effettuo il login')
-
 payload = {'_58_saveLastPath': 'false', '_58_redirect' : '', '_58_doActionAfterLogin': 'false', '_58_login': CF , '_58_pin': PIN, '_58_password': Password}    
 r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/home?p_p_id=58&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=3&p_p_col_count=4&_58_struts_action=%2Flogin%2Flogin', data=payload)
 cookieJar = s.cookies
@@ -55,7 +54,6 @@ p_auth = p_auth.replace("';", "")
 
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/dp/api?v=' + unixTime())
 cookieJar = s.cookies
- 
 print('Seleziono il tipo di incarico')
 if profilo == 1:
 # Delega Diretta
@@ -125,14 +123,14 @@ cookieJar = s.cookies
 print('Scarico il json delle fatture Emesse per la Partita IVA ' + cfcliente)
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/emesse/dal/'+Dal+'/al/'+Al+'?v=' + unixTime(), headers = headers)
 
-with open('fe_emesse.json', 'wb') as f:
+with open('fe_emessetr.json', 'wb') as f:
     f.write(r.content)
     
 print('Inizio a scaricare le fatture emesse')
-path = r'FattureEmesse_' + cfcliente
+path = r'FattureEmesseTRAN_' + cfcliente
 if not os.path.exists(path):
     os.makedirs(path)
-with open('fe_emesse.json') as data_file:    
+with open('fe_emessetr.json') as data_file:    
     data = json.load(data_file)
     numero_fatture = 0
     numero_notifiche = 0
@@ -144,7 +142,7 @@ with open('fe_emesse.json') as data_file:
             d = r.headers['content-disposition']
             fname = re.findall("filename=(.+)", d)
             print('Downloading ' + fname[0])
-            print('Totale fatture scaricate: ', numero_fatture)
+            print('Totale Transfrontaliere fatture scaricate: ', numero_fatture)
             with open(path + '/' + fname[0], 'wb') as f:
                 f.write(r.content)
                 fmetadato = re.findall("filename=(.+)", d)
