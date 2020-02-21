@@ -23,6 +23,7 @@ Data dal
 Data al
 cf cliente # ripete il cf del cliente, 
 piva cliente
+[0/1] solo per le fatture ricevute scaricamento per data di ricezione e/o emissione
 
 Nella sottocartella contenente il cf del contribuente troverai le tue FE e i relativi metadati.
 
