@@ -17,7 +17,7 @@ def unixTime():
     dt = datetime.now(tz=pytz.utc)
     return str(int(dt.timestamp() * 1000))
 
-profilo = 1 # Impostare il profilo Delega diretta codice 1, Me stesso 2, Studio Associato Default
+profilo = 0 # Impostare il profilo Delega diretta codice 1, Me stesso 2, Studio Associato Default
 CF = sys.argv[1]
 PIN = sys.argv[2]
 Password  = sys.argv[3]
@@ -26,8 +26,9 @@ Dal = sys.argv[5]
 Al = sys.argv[6]
 cfcliente = sys.argv[7]
 pivadiretta = sys.argv[8]
+tipo = int(sys.argv[9]) # 1 per data di ricezione 2 per data di emissione
 print('Sintassi:')
-print('py fec_ricevute.py UTENZA_ENTRATEL pin_entratel password_entratel cfstudio Data_inizio Data_fine cf_cliente piva_cliente')
+print('py fec_ricevute.py UTENZA_ENTRATEL pin_entratel password_entratel cfstudio Data_inizio Data_fine cf_cliente piva_cliente [0 data ricezione 1 data emissione] ')
 time.sleep(5)
 
 s = requests.Session()
@@ -122,10 +123,13 @@ headers = {'Host': 'ivaservizi.agenziaentrate.gov.it',
 print('Accetto le condizioni')
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/disclaimer/accetta?v='+unixTime() , headers = headers_token )
 cookieJar = s.cookies
-
+if tipo == 1:
 # r = s.get('https://ivaservizi.agenziaentrate.gov.it/ser/api/monitoraggio/v1/monitoraggio/fatture/?v='+unixTime()+'&idFiscCedente=&idFiscDestinatario=&idFiscEmittente=&idFiscTrasmittente=&idSdi=&perPage=10&start=1&statoFile=&tipoFattura=EMESSA')
-print('Scarico il json delle fatture ricevute per la partita IVA ' + cfcliente)
-r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/ricevute/dal/'+Dal+'/al/'+Al+'?v=' + unixTime(), headers = headers)
+     print('Scarico il json delle fatture ricevute per data di ricezione la partita IVA ' + cfcliente)
+     r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/ricevute/dal/'+Dal+'/al/'+Al+'/ricerca/ricezione?v=' + unixTime(), headers = headers)
+else:     
+     print('Scarico il json delle fatture ricevute per data di emissione per la partita IVA ' + cfcliente)
+     r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/ricevute/dal/'+Dal+'/al/'+Al+'/ricerca/emissione?v=' + unixTime(), headers = headers)
 
 with open('fe_ricevute.json', 'wb') as f:
     f.write(r.content)
