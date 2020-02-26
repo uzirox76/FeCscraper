@@ -5,11 +5,11 @@ Progetto derivato da FeCscraper di Pizzillo e modificato da Salvatore Crapanzano
 Script per automatizzare il download delle fatture elettroniche e i bolli e le fatture transfrontaliere e le fatture a disposizione usando il servizio Fatture e Corrispettivi. 
 
 Scarica:
-a) le fatture emesse e ricevute 
+a) le fatture emesse e ricevute per data di emissione e per data do ricezione (incorpora le modifiche della AdE di febbraio 2020)
 b) modello f24 dei bolli
 c) le fatture a disposizione
 
-Vo consiglio di eseguire lo script per il download delle fatture elettroniche ricevute dopo l'esecuzione dello script fatture a disposizione.
+Vi consiglio di eseguire lo script per il download delle fatture elettroniche ricevute dopo l'esecuzione dello script fatture a disposizione.
 
 Dipendenze Librerie da installare via pip: requests e pytz.
 
