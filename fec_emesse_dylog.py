@@ -155,9 +155,9 @@ with open('fe_emesse.json') as data_file:
             print('Downloading ' + fname[0])
             print('Totale fatture scaricate: ', numero_fatture)
             pathsub = r'FattureEmesse_' + cfcliente + '_' + str(numero_fatture)
-            if not os.path.exists(pathsub):
-                 os.makedirs(pathsub)
-            with open(pathsub + '/' + fname[0], 'wb') as f:
+            if not os.path.exists(path):
+                 os.makedirs(path)
+            with open(path + '/' + fname[0], 'wb') as f:
                 f.write(r.content)
                 fmetadato = re.findall("filename=(.+)", d)
                 r = s.get('https://ivaservizi.agenziaentrate.gov.it/ser/api/monitoraggio/v1/monitoraggio/fatture/dettaglio/?v='+unixTime()+'&idSdi='+idInviofile+'&operatore=e', headers = headers_token )
@@ -188,7 +188,7 @@ with open('fe_emesse.json') as data_file:
                         if r.status_code == 200:
                              d = r.headers['content-disposition']
                              fname = re.findall("filename=(.+)", d)
-                             with open(pathsub + '/' + fname[0], 'wb') as f:
+                             with open(path + '/' + fname[0], 'wb') as f:
                                  f.write(r.content)
         #os.system('cls')
 print('Per il cliente: ', cfcliente)
