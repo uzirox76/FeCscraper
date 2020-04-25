@@ -52,7 +52,7 @@ a) me stesso
 b) incaricati singoli professionisti
 c) incaricati professionisti che fanno parte di uno studio associato
 
-SE NON FUNZIONA, PER VOI DOVETE VEDERE QUESTA PARTE DEL CODICE. CON LO SCRIPT CHE HO CARICATO EE FUNZIONA
+SE NON FUNZIONA, PER VOI DOVETE VEDERE QUESTA PARTE DEL CODICE. CON LO SCRIPT CHE HO CARICATO. FUNZIONA!
 
 Esempio riga comando:
 py fec_emesse_dylog.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente
