@@ -1,6 +1,6 @@
 ## Licenza Libera progetto originario di Claudio Pizzillo
 ## Modifiche e riadattamenti da Salvatore Crapanzano
-## V. 2.2 del 21-02-2020  - Intermediari e Diretto e Studio Associato
+## V. 2.2.1 del 25-02-2020  - Intermediari e Diretto e Studio Associato
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -17,7 +17,7 @@ def unixTime():
     dt = datetime.now(tz=pytz.utc)
     return str(int(dt.timestamp() * 1000))
 
-profilo = 0 # Impostare il profilo Delega diretta codice 1, Me stesso 2, Studio Associato Default
+profilo = 1 # Impostare il profilo Delega diretta codice 1, Me stesso 2, Studio Associato Default
 CF = sys.argv[1]
 PIN = sys.argv[2]
 Password  = sys.argv[3]
@@ -26,9 +26,9 @@ Dal = sys.argv[5]
 Al = sys.argv[6]
 cfcliente = sys.argv[7]
 pivadiretta = sys.argv[8]
-tipo = int(sys.argv[9]) # 1 per data di ricezione 2 per data di emissione
+tipo = int(sys.argv[9]) # 1 per data di ricezione 2 (QUALSIASI VALORE DIVERSA DA 1) per data di emissione
 print('Sintassi:')
-print('py fec_ricevute.py UTENZA_ENTRATEL pin_entratel password_entratel cfstudio Data_inizio Data_fine cf_cliente piva_cliente [0 data ricezione 1 data emissione] ')
+print('py fec_ricevute.py UTENZA_ENTRATEL pin_entratel password_entratel cfstudio Data_inizio Data_fine cf_cliente piva_cliente [1 SCARICAMENTO PER data ricezione 2 SCARICAMENTO PER data emissione] ')
 time.sleep(5)
 
 s = requests.Session()
