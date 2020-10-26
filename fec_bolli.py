@@ -1,6 +1,6 @@
 ## Licenza Libera progetto originario di Claudio Pizzillo
 ## Modifiche e riadattamenti da Salvatore Crapanzano
-## V. 1.0 - Intermediari e Diretto
+## V. 1.1 - Intermediari e Diretto
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -21,7 +21,7 @@ CF = sys.argv[1]
 PIN = sys.argv[2]
 Password  = sys.argv[3]
 CODFISC  = sys.argv[4]
-PIVA = sys.argv[5]
+PIVA = sys.argv[5] // PARTA IVA STUDIO ASSOCIATO
 TRIM = sys.argv[6]
 ANNO = sys.argv[7]
 
@@ -61,7 +61,7 @@ r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavor
 # r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=meStessoAction', data=payload)
 
 # MODIFICA STUDIO ASSOCIATO
-# payload = {'sceltaincarico': PIVA + '-000', 'tipoincaricante' : 'incDelega', 'cf_inserito': cfcliente}    
+# payload = {'sceltaincarico': PIVA + '-000', 'tipoincaricante' : 'incDelega', 'cf_inserito': CODFISC}    
 # r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=incarichiAction', data=payload)
 #
 print('Aderisco al servizio')
