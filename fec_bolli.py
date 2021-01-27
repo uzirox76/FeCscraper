@@ -1,6 +1,6 @@
 ## Licenza Libera progetto originario di Claudio Pizzillo
 ## Modifiche e riadattamenti da Salvatore Crapanzano
-## V. 1.2 - Intermediari e Diretto
+## V. 1.3 - Intermediari e Diretto e studio associato
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -16,14 +16,15 @@ import os
 def unixTime():
     dt = datetime.now(tz=pytz.utc)
     return str(int(dt.timestamp() * 1000))
-
+profilo = 0 # Impostare il profilo Delega diretta codice 1, Me stesso 2, Studio Associato Default
 CF = sys.argv[1]
 PIN = sys.argv[2]
 Password  = sys.argv[3]
-CODFISC  = sys.argv[4]
-PIVA = sys.argv[5]
-TRIM = sys.argv[6]
-ANNO = sys.argv[7]
+cfstudio = sys.argv[4]
+cfcliente  = sys.argv[5]
+pivadiretta = sys.argv[6]
+TRIM = sys.argv[7]
+ANNO = sys.argv[8]
 
 s = requests.Session()
 s.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36'})
@@ -51,19 +52,25 @@ p_auth = p_auth.replace("';", "")
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/dp/api?v=' + unixTime())
 cookieJar = s.cookies
  
-print('Seleziono il tipo di incarico')
-# Delega diretta
-payload = {'cf_inserito': CODFISC}    
-r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=delegaDirettaAction', data=payload)
-
+if profilo == 1:
+# Delega Diretta
+            payload = {'cf_inserito': cfcliente};
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=delegaDirettaAction', data=payload);
+            payload = {'cf_inserito': cfcliente, 'sceltapiva' : pivadiretta};    
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=delegaDirettaAction', data=payload);
 # Me stesso
-# payload = {'sceltaincarico': PIVA + '-000', 'tipoincaricante' : 'incDiretto'}    
-# r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=meStessoAction', data=payload)
+elif profilo == 2:
+            payload = {'sceltaincarico': cfstudio + '-000', 'tipoincaricante' : 'incDiretto'};
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=meStessoAction', data=payload)
+            payload = {'sceltaincarico': cfstudio + '-000', 'tipoincaricante' : 'incDiretto', 'sceltapiva' : pivadiretta};    
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=meStessoAction', data=payload);
+# Login per STUDIO ASSOCIATO
+else:
+            payload = {'sceltaincarico': cfstudio + '-000', 'tipoincaricante' : 'incDelega', 'cf_inserito': cfcliente};
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=incarichiAction', data=payload);
+            payload = {'sceltaincarico': cfstudio + '-000', 'tipoincaricante' : 'incDelega', 'cf_inserito': cfcliente, 'sceltapiva' : pivadiretta};
+            r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=incarichiAction', data=payload);
 
-# MODIFICA STUDIO ASSOCIATO
-# payload = {'sceltaincarico': PIVA + '-000', 'tipoincaricante' : 'incDelega', 'cf_inserito': CODFISC}    
-# r = s.post('https://ivaservizi.agenziaentrate.gov.it/portale/scelta-utenza-lavoro?p_auth='+ p_auth + '&p_p_id=SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_SceltaUtenzaLavoro_WAR_SceltaUtenzaLavoroportlet_javax.portlet.action=incarichiAction', data=payload)
-#
 print('Aderisco al servizio')
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/ser/api/fatture/v1/ul/me/adesione/stato/')
 cookieJar = s.cookies 
@@ -115,7 +122,7 @@ headers = {'Host': 'ivaservizi.agenziaentrate.gov.it',
 
 # r = s.get('https://ivaservizi.agenziaentrate.gov.it/ser/api/monitoraggio/v1/monitoraggio/fatture/?v='+unixTime()+'&idFiscCedente=&idFiscDestinatario=&idFiscEmittente=&idFiscTrasmittente=&idSdi=&perPage=10&start=1&statoFile=&tipoFattura=EMESSA')
 
-print('Scarico il json deI BOLLI ELETTRONICI per la CODICE FISCALE ' + CODFISC)
+print('Scarico il json deI BOLLI ELETTRONICI per la CODICE FISCALE ' + cfcliente)
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-web/?v='+unixTime()+'#/fatture/bollo', headers = headers)
 cookieJar = s.cookies
 r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/bollo/elenco/X/'+ANNO+'/'+TRIM+'?v=+unixTime()', headers = headers_token)
@@ -126,7 +133,7 @@ print('Inizio a scaricare i bolli')
 path = r'F24_Bolli_' + TRIM + ANNO
 if not os.path.exists(path):
     os.makedirs(path)
-r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/bollo/dettaglio/'+TRIM+''+ANNO+''+PIVA+'?v='+unixTime() , headers = headers )
+r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/bollo/dettaglio/'+TRIM+''+ANNO+''+pivadiretta+'?v='+unixTime() , headers = headers )
 cookieJar = s.cookies
 data = json.load(open("fe_bollo.json"))
 bollojson3 = data['fattureBollo'][0]
@@ -134,6 +141,6 @@ print(bollojson3)
 url = 'https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fe/bollo/stampa/F24'
 response = requests.post(url, data=json.dumps(bollojson3).encode("utf-8"), verify=False, headers = headers, cookies=cookieJar)
 if r.status_code == 200:
-    with open(path + '/' + CODFISC + '_F24_BOLLI.PDF', 'wb') as f:
+    with open(path + '/' + cfcliente + '_F24_BOLLI.PDF', 'wb') as f:
         f.write(response.content)
 sys.exit()
