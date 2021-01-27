@@ -1,6 +1,6 @@
 ## Licenza Libera progetto originario di Claudio Pizzillo
 ## Modifiche e riadattamenti da Salvatore Crapanzano
-## V. 1.1 - Intermediari e Diretto
+## V. 1.2 - Intermediari e Diretto
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -21,7 +21,7 @@ CF = sys.argv[1]
 PIN = sys.argv[2]
 Password  = sys.argv[3]
 CODFISC  = sys.argv[4]
-PIVA = sys.argv[5] // PARTA IVA STUDIO ASSOCIATO
+PIVA = sys.argv[5]
 TRIM = sys.argv[6]
 ANNO = sys.argv[7]
 
