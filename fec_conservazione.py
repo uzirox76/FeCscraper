@@ -1,6 +1,6 @@
 ## Crapanzano Salvatore (Conservazione Fattura)
 ## Per effettuare il controllo sul portale ivaservizi.agenziaentrate.gov.it, inserire il nome del file nella relativa parte del codice
-## Vers. 1.3a del 29-01-12021
+## Vers. 1.5a del 29-01-12021
 ## Cartella di lavoro è ./invio sotto la dir di lancio dello script di invio
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -17,6 +17,9 @@ def unixTime():
     dt = datetime.now(tz=pytz.utc)
     return str(int(dt.timestamp() * 1000))
 
+print('ATTENZIONE: Verranno inviare le fatture con estenzione p7m ed xml contenute nella sotto-cartella ./invio')
+print('per il cliente impostato nel percorso di lancio del programma!')
+time.sleep(5)
 now = datetime.now() # current date and time
 profilo = 1
 CF = sys.argv[1]
@@ -129,53 +132,57 @@ r = s.get('https://ivaservizi.agenziaentrate.gov.it/ser/fatturewizard/html/parti
 
 #seleziona file 
 ## nome_file='IT02081640845_00001.xml'
+nr_file = 0
 for root, dirs, files in os.walk("./invio"):
     for file in files:
-        if file.endswith(".xml"):
-             print(os.path.join(file))
-             nome_file = os.path.join(file)
-             print("Il nome file è", nome_file)
-             f=open(nome_file, "rb")
+        print("Elenco file da inviare: ", files)
+        ext = [".p7m", ".xml"]
+        if file.endswith(tuple(ext)):
+             nome_file = file
+             # print("Percorso", os.path.join(dirs))
+             print("Il nome file da inviare è", nome_file)
+             with open('./invio/' + nome_file, "rb") as f:
+                 headers_file= { 'Host': 'ivaservizi.agenziaentrate.gov.it',
+                                 'referer': 'https://ivaservizi.agenziaentrate.gov.it/ser/fatturewizard/',
+                                 'accept': 'application/json, text/plain, */*',
+                                 'accept-encoding': 'gzip, deflate',
+                                 'accept-language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7,fr;q=0.6',
+                                 'x-xss-protection': '1; mode=block',
+                                 'strict-transport-security': 'max-age=16070400; includeSubDomains',
+                                 'x-content-type-options': 'nosniff',
+                                 'Origin': 'https://ivaservizi.agenziaentrate.gov.it',
+                                 'X-XSS-Protection': '1, mode=block',
+                                 'x-frame-options': 'deny',
+                                 'x-b2bcookie': xb2bcookie,
+                                 'x-token': xtoken,
+                                 'sec-fetch-site': 'same-origin',
+                                 'content-length':'9049',
+                                 'content-type': 'application/octet-stream',
+                                 'sec-fetch-mode': 'cors',
+                                 'Sec-Fetch-Dest': 'empty',
+                                 'connection': 'keep-alive',
+                                 'x-nome-file': nome_file,
+                                 'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36'}    
 
-             headers_file= { 'Host': 'ivaservizi.agenziaentrate.gov.it',
-                             'referer': 'https://ivaservizi.agenziaentrate.gov.it/ser/fatturewizard/',
-                             'accept': 'application/json, text/plain, */*',
-                             'accept-encoding': 'gzip, deflate',
-                             'accept-language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7,fr;q=0.6',
-                             'x-xss-protection': '1; mode=block',
-                             'strict-transport-security': 'max-age=16070400; includeSubDomains',
-                             'x-content-type-options': 'nosniff',
-                             'Origin': 'https://ivaservizi.agenziaentrate.gov.it',
-                             'X-XSS-Protection': '1, mode=block',
-                             'x-frame-options': 'deny',
-                             'x-b2bcookie': xb2bcookie,
-                             'x-token': xtoken,
-                             'sec-fetch-site': 'same-origin',
-                             'content-length':'9049',
-                             'content-type': 'application/octet-stream',
-                             'sec-fetch-mode': 'cors',
-                             'Sec-Fetch-Dest': 'empty',
-                             'connection': 'keep-alive',
-                             'x-nome-file': nome_file,
-                             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36'}    
-
-             print(f)    
-             r = s.post('https://ivaservizi.agenziaentrate.gov.it/ser/api/fatture/v1/conservazione/fatture/?v='+unixTime(),headers=headers_file , data=f)
-
-             print(r.status_code)
-             if r.status_code == 500:
-                 print('Servizio dell''Azenzia delle entrate non disponibile')
-                 print('Controllo non andanto a buon fine, riprovare più tardi')
-                 print('Disconnessione in corso')
-                 r = s.get('https://ivaservizi.agenziaentrate.gov.it/portale/c/portal/logout')
-                 sys.exit()
-             if r.status_code == 200:
-                 print('Invio effettuato con successo!', nome_file)
-                 print("Codice invio Conservazione:", r.text)
-                 f = open(cfcliente+ ".csv", 'a')
-                 f.write(nome_file)
-                 f.write(",")
-                 f.write(r.text)
-                 f.write(",")
-                 f.write(str(now) + "\n")
-                 f.close()
+                 print("Contenuto", f)    
+                 r = s.post('https://ivaservizi.agenziaentrate.gov.it/ser/api/fatture/v1/conservazione/fatture/?v='+unixTime(),headers=headers_file , data=f)
+                 print(r.status_code)
+                 if r.status_code == 500:
+                     print('Servizio dell''Azenzia delle entrate non disponibile')
+                     print('Controllo non andanto a buon fine, riprovare più tardi')
+                     print('Disconnessione in corso')
+                     r = s.get('https://ivaservizi.agenziaentrate.gov.it/portale/c/portal/logout')
+                     sys.exit()
+                 if r.status_code == 200:
+                     print('Invio effettuato con successo!', nome_file)
+                     print("Codice invio Conservazione:", r.text)
+                     conservate = open(cfcliente+ ".csv", 'a')
+                     conservate.write(nome_file)
+                     conservate.write(",")
+                     conservate.write(r.text)
+                     conservate.write(",")
+                     conservate.write(str(now) + "\n")
+                     conservate.close()
+                     nr_file = nr_file + 1
+        print("nr. files inviato/i --> ", nr_file)
+        continue;
