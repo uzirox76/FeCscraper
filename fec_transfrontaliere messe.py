@@ -1,6 +1,6 @@
 ## Licenza Libera progetto originario di Claudio Pizzillo
 ## Modifiche e riadattamenti da Salvatore Crapanzano
-## V. 2.1 - Intermediari e Diretto e Studio Associato
+## V. 2.1 - Intermediari e Diretto e Studio Associato transfrontaliere 
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
