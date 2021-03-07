@@ -1,6 +1,6 @@
 ## Crapanzano Salvatore (Conservazione Fattura)
 ## Per effettuare il controllo sul portale ivaservizi.agenziaentrate.gov.it, inserire il nome del file nella relativa parte del codice
-## Vers. 1.5a del 29-01-12021
+## Vers. 1.6a del 07-03-2021
 ## Cartella di lavoro è ./invio sotto la dir di lancio dello script di invio
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -136,7 +136,7 @@ nr_file = 0
 for root, dirs, files in os.walk("./invio"):
     for file in files:
         print("Elenco file da inviare: ", files)
-        ext = [".p7m", ".xml"]
+        ext = [".p7m", ".xml", ".P7M", "XML"]
         if file.endswith(tuple(ext)):
              nome_file = file
              # print("Percorso", os.path.join(dirs))
