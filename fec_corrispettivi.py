@@ -1,6 +1,6 @@
 ## Crapanzano Salvatore (Corrispettivi Fattura)
 ## Per effettuare l'invio delle richieste corrispettivi sul portale ivaservizi.agenziaentrate.gov.it, inserire il nome del file nella relativa parte del codice
-## Vers. 1.8.1 del 13-03-2021
+## Vers. 1.8.2 del 18-03-2021
 ## Cartella di lavoro è ./inviocorrispettivi sotto la dir di lancio dello script di invio
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -34,10 +34,10 @@ CF = sys.argv[1]
 PIN = sys.argv[2]
 Password  = sys.argv[3]
 cfstudio = sys.argv[4]
-cfcliente = sys.argv[5]
-pivadiretta  = sys.argv[6]
-datainiziorichiestacorrispettivi = sys.argv[7]
-datafinerichiestacorrispettivi = sys.argv[8]
+datainiziorichiestacorrispettivi = sys.argv[5]
+datafinerichiestacorrispettivi = sys.argv[6]
+cfcliente = sys.argv[7]
+pivadiretta  = sys.argv[8]
 path = r'inviocorrispettivi'
 
 if not os.path.exists(path):
