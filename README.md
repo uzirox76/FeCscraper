@@ -1,15 +1,11 @@
 # Downloader Fatture elettroniche e i modelli f24 bolli
 
 Progetto derivato da FeCscraper di Pizzillo e modificato da Salvatore Crapanzano https:\\www.salvatorecrapanzano.com
+Ulteriori modifiche Uzirox (ScarFeC2.py)
 
-py fec_emesse_dylog.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente
+python ScarFeC2.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente 1
 
-py fec_ricevutedisposizione.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente 1
-
-py fec_trasfrontalieremesse.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente 1
-
-py fec_ricevute.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente 1
-
+Questo scaricherà nella cartella dov'è presente il file .py tutte le fatture "a disposizione", "ricevute" e "emesse" in 2 cartelle: "Acquisti" e "Vendite" + codicefiscale + data_inizio (in modo da poter salvare anche mese per mese)
 
 Script per automatizzare il download delle fatture elettroniche e i bolli e le fatture transfrontaliere e le fatture a disposizione usando il servizio Fatture e Corrispettivi. 
 
@@ -62,6 +58,3 @@ py fec_ricevutedisposizione.py Codice_entratel_fiscoonline codice_PIN_entratel_f
 py fec_trasfrontalieremesse.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente 1
 
 py fec_ricevute.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente 1
-
-
-
