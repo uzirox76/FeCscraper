@@ -153,18 +153,7 @@ with open('fe_ricevute_disposizione.json') as data_file:
             print('Downloading ' + fname[0])
             print('Totale fatture messe a disposizione scaricate: ', numero_fatture)
             with open(path + '/' + fname[0], 'wb') as f:
-                f.write(r.content)
-                fmetadato = re.findall("filename=(.+)", d)
-        # r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fatture/file/'+fatturaFile+'?tipoFile=FILE_METADATI&download=1&v='+unixTime() , headers = headers_token )
-        # if r.status_code == 200:
-            # numero_notifiche = numero_notifiche + 1
-            # d = r.headers['content-disposition']
-            # fname = re.findall("filename=(.+)", d)
-            # print('Downloading metadati = ' + fname[0])
-            # print('Downloading metadati rinominato = ' + fmetadato[0] + '_metadato.xml')
-            # print('Totale notifiche scaricate: ', numero_notifiche)
-            # with open(path + '/' + fmetadato[0] + '_metadato.xml', 'wb') as f:
-                # f.write(r.content)                
+                f.write(r.content)              
 print('Totale fatture messe a disposizione scaricate: ', numero_fatture)
 
 
@@ -202,18 +191,7 @@ with open('fe_ricevute.json') as data_file:
             print('Downloading ' + fname[0])
             print('Totale fatture scaricate: ', numero_fatture)
             with open(path + '/' + fname[0], 'wb') as f:
-                f.write(r.content)
-                fmetadato = re.findall("filename=(.+)", d)
-        # r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fatture/file/'+fatturaFile+'?tipoFile=FILE_METADATI&download=1&v='+unixTime() , headers = headers_token )
-        # if r.status_code == 200:
-            # numero_notifiche = numero_notifiche + 1
-            # d = r.headers['content-disposition']
-            # fname = re.findall("filename=(.+)", d)
-            # print('Downloading metadati = ' + fname[0])
-            # print('Downloading metadati rinominato = ' + fmetadato[0] + '_metadato.xml')
-            # print('Totale notifiche scaricate: ', numero_notifiche)
-            # with open(path + '/' + fmetadato[0] + '_metadato.xml', 'wb') as f:
-                # f.write(r.content)                
+                f.write(r.content)          
 print('Totale fatture scaricate: ', numero_fatture)
 
 
@@ -247,18 +225,74 @@ with open('fe_emesse.json') as data_file:
             print('Downloading ' + fname[0])
             print('Totale fatture scaricate: ', numero_fatture)
             with open(path + '/' + fname[0], 'wb') as f:
+                f.write(r.content)             
+print('Per il cliente: ', cfcliente)
+print('Totale fatture scaricate: ', numero_fatture)
+
+
+
+#===============================================================================================
+# FATTURE TRANSFRONTALIERE EMESSE
+#===============================================================================================
+print('Scarico il json delle fatture  Transfrontaliere Emesse per la Partita IVA ' + cfcliente)
+r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/ft/emesse/dal/'+Dal+'/al/'+Al+'?v=' + unixTime(), headers = headers)
+
+with open('fe_emessetr.json', 'wb') as f:
+    f.write(r.content)
+    
+print('Inizio a scaricare le fatture transfrontaliere emesse')
+path = r'VENDITE_' + cfcliente + "_" + Dal
+if not os.path.exists(path):
+    os.makedirs(path)
+with open('fe_emessetr.json') as data_file:    
+    data = json.load(data_file)
+    numero_fatture = 0
+    numero_notifiche = 0
+    for fattura in data['fatture']:
+        fatturaFile = fattura['tipoInvio']+fattura['idFattura']
+        r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fatture/file/'+fatturaFile+'?tipoFile=FILE_FATTURA&download=1&v='+unixTime() , headers = headers_token )
+        if r.status_code == 200:
+            numero_fatture = numero_fatture + 1
+            d = r.headers['content-disposition']
+            fname = re.findall("filename=(.+)", d)
+            print('Downloading ' + fname[0])
+            print('Totale Transfrontaliere fatture scaricate: ', numero_fatture)
+            with open(path + '/' + fname[0], 'wb') as f:
                 f.write(r.content)
-                fmetadato = re.findall("filename=(.+)", d)
-        # r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fatture/file/'+fatturaFile+'?tipoFile=FILE_METADATI&download=1&v='+unixTime() , headers = headers_token )
-        # if r.status_code == 200:
-            # numero_notifiche = numero_notifiche + 1
-            # d = r.headers['content-disposition']
-            # fname = re.findall("filename=(.+)", d)
-            # print('Downloading metadati = ' + fname[0])
-            # print('Downloading metadati rinominato = ' + fmetadato[0] + '_metadato.xml')
-            # print('Totale notifiche scaricate: ', numero_notifiche)
-            # with open(path + '/' + fmetadato[0] + '_metadato.xml', 'wb') as f:
-                # f.write(r.content)                
+print('Per il cliente: ', cfcliente)
+print('Totale fatture scaricate: ', numero_fatture)
+
+
+
+
+#===============================================================================================
+# FATTURE TRANSFRONTALIERE RICEVUTE
+#===============================================================================================
+print('Scarico il json delle fatture  Transfrontaliere Ricevute per la Partita IVA ' + cfcliente)
+r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/ft/ricevute/dal/'+Dal+'/al/'+Al+'?v=' + unixTime(), headers = headers)
+
+with open('fe_ricevutetr.json', 'wb') as f:
+    f.write(r.content)
+    
+print('Inizio a scaricare le fatture transfrontaliere ricevute')
+path = r'ACQUISTI_' + cfcliente + "_" + Dal
+if not os.path.exists(path):
+    os.makedirs(path)
+with open('fe_ricevutetr.json') as data_file:    
+    data = json.load(data_file)
+    numero_fatture = 0
+    numero_notifiche = 0
+    for fattura in data['fatture']:
+        fatturaFile = fattura['tipoInvio']+fattura['idFattura']
+        r = s.get('https://ivaservizi.agenziaentrate.gov.it/cons/cons-services/rs/fatture/file/'+fatturaFile+'?tipoFile=FILE_FATTURA&download=1&v='+unixTime() , headers = headers_token )
+        if r.status_code == 200:
+            numero_fatture = numero_fatture + 1
+            d = r.headers['content-disposition']
+            fname = re.findall("filename=(.+)", d)
+            print('Downloading ' + fname[0])
+            print('Totale Transfrontaliere fatture scaricate: ', numero_fatture)
+            with open(path + '/' + fname[0], 'wb') as f:
+                f.write(r.content)
 print('Per il cliente: ', cfcliente)
 print('Totale fatture scaricate: ', numero_fatture)
 
