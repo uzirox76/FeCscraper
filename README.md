@@ -3,9 +3,9 @@
 Progetto derivato da FeCscraper di Pizzillo e modificato da Salvatore Crapanzano https:\\www.salvatorecrapanzano.com
 
 -----------------------------------------------------------------------------------
-Ulteriori modifiche Uzirox (ScarFec2.py)
+Ulteriori modifiche Uzirox (ScarFec3.py)
 
-python ScarFec2.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente 1
+python ScarFec3.py Codice_entratel_fiscoonline codice_PIN_entratel_fiscoonline password_fiscoonline codice_fiscale_studio_intermediario 01012020 31032020 CF_cliente Partita_IVA_cliente 1
 
 Questo scaricherà nella cartella dov'è presente il file .py tutte le fatture "a disposizione", "ricevute" e "emesse" (anche le transfrontaliere) in 2 cartelle: "Acquisti" e "Vendite" + codicefiscale + data_inizio (in modo da poter salvare anche mese per mese)
 -----------------------------------------------------------------------------------
